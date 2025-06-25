@@ -34,10 +34,12 @@ app.use('/api/instagram', instagramRouter);
 
 // Serve static files from Next.js build in production
 if (process.env.NODE_ENV === 'production') {
-  const nextOutPath = path.join(__dirname, '../muralla-dashboard/out');
+  const clientBuildPath = path.join(__dirname, '../client/.next');
+  const clientPublicPath = path.join(__dirname, '../client/public');
   
   // Serve Next.js static files
-  app.use(express.static(nextOutPath));
+  app.use('/_next', express.static(path.join(clientBuildPath, 'static')));
+  app.use(express.static(clientPublicPath));
   
   // Handle client-side routing - serve index.html for all non-API routes
   app.get('*', (req, res) => {
@@ -46,8 +48,9 @@ if (process.env.NODE_ENV === 'production') {
       return res.status(404).json({ error: 'API route not found' });
     }
     
-    // Serve Next.js index.html for all other routes
-    res.sendFile(path.join(nextOutPath, 'index.html'));
+    // For production, we'll need to serve the Next.js app differently
+    // This is a simple fallback - in production you'd want to use Next.js server
+    res.sendFile(path.join(clientPublicPath, 'index.html'));
   });
 }
 
