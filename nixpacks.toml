@@ -1,0 +1,15 @@
+[phases.setup]
+nixPkgs = ['nodejs_18', 'npm']
+
+[phases.install]
+cmds = [
+    'npm install',
+    'cd server && npm install',
+    'cd muralla-dashboard && npm install --production=false'
+]
+
+[phases.build]
+cmds = ['npm run build']
+
+[start]
+cmd = 'npm run start:production'
